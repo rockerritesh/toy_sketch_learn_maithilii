@@ -20,13 +20,13 @@ The Sketch App is a web application that allows users to draw on a canvas and sa
 1. Clone the repository:
 
 ```
-git clone <repository-url>
+git clone https://github.com/rockerritesh/toy_sketch_learn_maithilii
 ```
 
 2. Navigate to the project directory:
 
 ```
-cd sketch-app
+cd toy_sketch_learn_maithilii
 ```
 
 3. Create a virtual environment (optional but recommended):
