@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sketch App</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #sketch-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+
+        #reference-image {
+            margin-right: 20px;
+        }
+
+        #sketch-board {
+            border: 1px solid black;
+        }
+
+        #saveBtn {
+            margin-top: 10px;
+        }
+
+        #reloadBtn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="sketch-container">
+            <div id="reference-image">
+                <img src="/static/image/test.png" alt="Reference Image">
+            </div>
+            <div id="sketch-board">
+                <canvas id="canvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+        <button id="saveBtn">Save Image</button>
+        <button id="reloadBtn">New Image</button>
+    </div>
+    <script>
+        // Get the canvas element
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        // Set up drawing functionality
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function startDrawing(event) {
+            isDrawing = true;
+            [lastX, lastY] = [event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop];
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function draw(event) {
+            if (!isDrawing) return;
+
+            const currentX = event.clientX - canvas.offsetLeft;
+            const currentY = event.clientY - canvas.offsetTop;
+
+            context.lineWidth = 5;
+            context.lineCap = 'round';
+            context.strokeStyle = 'black';
+
+            context.beginPath();
+            context.moveTo(lastX, lastY);
+            context.lineTo(currentX, currentY);
+            context.stroke();
+
+            [lastX, lastY] = [currentX, currentY];
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        // Save the modified image
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.addEventListener('click', function() {
+            const imageData = canvas.toDataURL();
+
+            fetch('/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `imageData=${encodeURIComponent(imageData)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        // Reload the page
+        const reloadBtn = document.getElementById('reloadBtn');
+        reloadBtn.addEventListener('click', function() {
+            location.reload();
+        });
+    </script>
+</body>
+</html>
