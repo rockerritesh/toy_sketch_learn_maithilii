@@ -60,6 +60,7 @@
         function startDrawing(event) {
             isDrawing = true;
             [lastX, lastY] = getCoordinates(event);
+            event.preventDefault(); // Prevent default touch behavior
         }
 
         function stopDrawing() {
