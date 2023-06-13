@@ -1,5 +1,5 @@
 # Sketch App
-
+![](ss.png)
 The Sketch App is a web application that allows users to draw on a canvas and save their sketches as images. It provides a reference image for users to draw on, and they can save their modified images with a single click.
 
 ## Features
